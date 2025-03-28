@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Series from "./pages/Series";
 import Login from "./pages/Login";
+import Subscription from "./pages/Subscription";
+
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./src/pages/Profile";
 import Navbar from "./components/Navbar";
@@ -14,6 +16,8 @@ import Watchlist from "./pages/Watchlist";
 import SearchBar from "./components/SearchBar";
 import { AuthProvider } from "./context/AuthContext";
 import Profile from "./src/pages/Profile";
+import Dashboard from "./pages/Dashboard";
+
 function App() {
 	return (
 		<Router>
@@ -30,6 +34,12 @@ function App() {
 					<Route path="/profile" element={user ? <Profile /> : <Login />} />
 					<Route path="/watchlist" element={user ? <Watchlist /> : <Login />} />
 					<Route path="/search" element={<SearchBar />} />
+					<Route
+						path="/subscription"
+						element={user ? <Subscription /> : <Login />}
+					/>
+					<Route path="/dashboard" element={user ? <Dashboard /> : <Login />} />
+
 					<Route
 						path="/protected"
 						element={

@@ -1,7 +1,7 @@
 // API Integration (src/api/tmdbApi.js)
 import axios from "axios";
 
-const API_KEY = "YOUR_TMDB_API_KEY";
+const API_KEY = "7cb1b8784b19f4c938ee5760e7aa3f27";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 export const fetchTrendingMovies = async () => {

@@ -2,16 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchMovieDetails } from "../api/tmdbApi";
-import {
-	addToWatchlist,
-	removeFromWatchlist,
-	getWatchlist,
-} from "../api/firestore";
 
 function MovieDetails() {
 	const { id } = useParams();
 	const [movie, setMovie] = useState(null);
-	const [watchlist, setWatchlist] = useState([]);
 
 	useEffect(() => {
 		const getMovie = async () => {
@@ -19,37 +13,13 @@ function MovieDetails() {
 			setMovie(data);
 		};
 		getMovie();
-		fetchMovieDetails(id).then(setMovie);
-		getWatchlist().then(setWatchlist);
 	}, [id]);
-
-	const isInWatchlist = watchlist.some((item) => item.id === movie?.id);
-
-	const handleWatchlist = async () => {
-		if (isInWatchlist) {
-			await removeFromWatchlist(movie);
-		} else {
-			await addToWatchlist(movie);
-		}
-		setWatchlist(await getWatchlist());
-	};
 
 	if (!movie)
 		return <div className="text-white text-center p-10">Loading...</div>;
 
 	return (
 		<div className="bg-gray-900 text-white min-h-screen p-8">
-			{movie && (
-				<>
-					<h1 className="text-3xl font-bold">{movie.title}</h1>
-					<button
-						onClick={handleWatchlist}
-						className="bg-red-600 px-4 py-2 mt-4"
-					>
-						{isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-					</button>
-				</>
-			)}
 			<div className="flex flex-col md:flex-row gap-8">
 				<img
 					src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -94,3 +64,49 @@ function MovieDetails() {
 }
 
 export default MovieDetails;
+
+
+
+// MovieDetails Page (src/pages/MovieDetails.js)
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { fetchMovieDetails } from "../api/tmdbApi";
+import { addToWatchlist, removeFromWatchlist, getWatchlist } from "../api/firestore";
+
+function MovieDetails() {
+  const { id } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [watchlist, setWatchlist] = useState([]);
+
+  useEffect(() => {
+    fetchMovieDetails(id).then(setMovie);
+    getWatchlist().then(setWatchlist);
+  }, [id]);
+
+  const isInWatchlist = watchlist.some((item) => item.id === movie?.id);
+
+  const handleWatchlist = async () => {
+    if (isInWatchlist) {
+      await removeFromWatchlist(movie);
+    } else {
+      await addToWatchlist(movie);
+    }
+    setWatchlist(await getWatchlist());
+  };
+
+  return (
+    <div className="bg-gray-900 text-white p-8 min-h-screen">
+      {movie && (
+        <>
+          <h1 className="text-3xl font-bold">{movie.title}</h1>
+          <button onClick={handleWatchlist} className="bg-red-600 px-4 py-2 mt-4">
+            {isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default MovieDetails;
+
